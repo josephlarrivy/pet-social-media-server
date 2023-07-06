@@ -3,5 +3,8 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   id VARCHAR(50) PRIMARY KEY NOT NULL,
   username VARCHAR(30) NOT NULL,
-  
+  displayname VARCHAR(50) NOT NULL,
+  avatar VARCHAR(300) NOT NULL,
+  password_hash VARCHAR(100) NOT NULL,
+  UNIQUE (id, username)
 );

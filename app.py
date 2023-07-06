@@ -7,6 +7,7 @@ import uuid
 
 
 from models import db
+from routes.user_routes import user_bp
 
 secret_key = 'qwhdu&*UJdwqdqw'
 bcrypt = Bcrypt()
@@ -17,6 +18,11 @@ def connect_db(app):
     db.init_app(app)
 
 app = Flask(__name__)
+app.register_blueprint(user_bp)
+
+
+
+
 CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///pet-social-media-development-db"
@@ -31,8 +37,6 @@ connect_db(app)
 
 #############################################
 
-
-
 @app.route('/test', methods=['GET'])
 def testing_api_get():
     return 'connected'
@@ -42,7 +46,9 @@ def testing_api_post():
     data = request.get_json()
     return data
 
+#############################################
 
+app.register_blueprint(user_bp, url_prefix='/users')
 
 
 
