@@ -50,3 +50,24 @@ def delete_user(user_id):
         return jsonify({'message': 'User deleted successfully'}), 200
     else:
         return jsonify({'error': 'User not found'}), 404
+
+@user_bp.route('/<user_id>', methods=['PATCH'])
+def update_user(user_id):
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    data = request.get_json()
+    column_name = data.get('columnName')
+    new_value = data.get('newValue')
+
+    if not column_name or not new_value:
+        return jsonify({'error': 'Invalid request data'}), 400
+
+    updated = user.update_column(user_id, column_name, new_value)
+
+    if updated:
+        return jsonify({'message': 'User updated successfully'}), 200
+    else:
+        return jsonify({'error': 'Failed to update user'}), 500

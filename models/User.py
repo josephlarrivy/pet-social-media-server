@@ -80,3 +80,14 @@ class User(db.Model):
             return True
         else:
             return False
+
+    @classmethod
+    def update_column(cls, user_id, column_name, value):
+        user = cls.query.get(user_id)
+
+        if user:
+            setattr(user, column_name, value)
+            db.session.commit()
+            return True
+        else:
+            return False
