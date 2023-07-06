@@ -8,7 +8,6 @@ from datetime import datetime
 # from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 # from datetime import datetime, timedelta
 
-
 secret_key = 'qwhdu&*UJdwqdqw'
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -19,14 +18,11 @@ def connect_db(app):
 
 ###########################################################
 
-
 class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.String(70), primary_key=True, unique=True, nullable=False)
     email = db.Column(db.String(70), unique=True, nullable=False)
-    pet_name = db.Column(db.String(50), nullable=False)
-    pet_username = db.Column(db.String(50), unique=True, nullable=False)
     owner_name = db.Column(db.String(50), nullable=False)
     avatar = db.Column(db.String(300), nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
@@ -34,11 +30,9 @@ class User(db.Model):
     login_count = db.Column(db.Integer, default=0)
     last_login = db.Column(db.Integer, default='none')
 
-    def __init__(self, email, pet_name, pet_username, owner_name, avatar, password):
+    def __init__(self, email, owner_name, avatar, password):
         self.id = 'user-' + str(uuid.uuid4())[:30]
         self.email = email
-        self.pet_name = pet_name
-        self.pet_username = pet_username
         self.owner_name = owner_name
         self.avatar = avatar
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -49,8 +43,6 @@ class User(db.Model):
         payload = {
             'userId': self.id,
             'email': self.email,
-            'petName': self.pet_name,
-            'petUsername': self.pet_username,
             'ownerName': self.owner_name,
             'avatar': self.avatar,
             'authenticated' : True
@@ -59,8 +51,8 @@ class User(db.Model):
         return encoded_payload
 
     @classmethod
-    def register(cls, email, pet_name, pet_username, owner_name, avatar, password):
-        user = cls(email, pet_name, pet_username, owner_name, avatar, password)
+    def register(cls, email, owner_name, avatar, password):
+        user = cls(email, owner_name, avatar, password)
         user.initialization_date_time = datetime.now()
         user.last_login = datetime.now()
         db.session.add(user)
@@ -79,3 +71,12 @@ class User(db.Model):
         else:
             return None
 
+    @classmethod
+    def delete_user(cls, user_id):
+        user = cls.query.get(user_id)
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return True
+        else:
+            return False

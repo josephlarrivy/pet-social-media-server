@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 import uuid
 
 
-from models import db
+from models.User import db
 from routes.user_routes import user_bp
 
 secret_key = 'qwhdu&*UJdwqdqw'

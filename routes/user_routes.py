@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from models import User  # adjust this import as necessary
+from models.User import User  # adjust this import as necessary
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -15,8 +15,6 @@ def register_new_user():
     data = request.get_json()
 
     email = data.get('email')
-    pet_name = data.get('petName')
-    pet_username = data.get('petUsername')
     owner_name = data.get('ownerName')
     avatar = data.get('avatar')
     password = data.get('password')
@@ -26,7 +24,7 @@ def register_new_user():
     if existing_user:
         return jsonify({'error': 'duplicate email'}), 409
     
-    token_bytes = User.register(email, pet_name, pet_username, owner_name, avatar, password)
+    token_bytes = User.register(email, owner_name, avatar, password)
     token_string = token_bytes.decode('utf-8')
     return jsonify({'token': token_string}), 200
 
@@ -43,3 +41,12 @@ def authenticate_user():
 
     token_string = token_bytes.decode('utf-8')
     return jsonify({'token': token_string}), 200
+
+@user_bp.route('/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    deleted = User.delete_user(user_id)
+
+    if deleted:
+        return jsonify({'message': 'User deleted successfully'}), 200
+    else:
+        return jsonify({'error': 'User not found'}), 404

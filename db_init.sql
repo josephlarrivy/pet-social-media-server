@@ -3,8 +3,6 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   id VARCHAR(35) PRIMARY KEY NOT NULL,
   email VARCHAR(70) NOT NULL,
-  pet_name VARCHAR(50) NOT NULL,
-  pet_username VARCHAR(50) NOT NULL,
   owner_name VARCHAR(50) NOT NULL,
   avatar VARCHAR(300) NOT NULL,
   password_hash VARCHAR(100) NOT NULL,
