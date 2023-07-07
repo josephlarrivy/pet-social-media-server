@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS pets CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users (
   id VARCHAR(35) PRIMARY KEY NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE users (
   password_hash VARCHAR(100) NOT NULL,
   initialization_date_time DATE NOT NULL,
   login_count INTEGER NOT NULL,
-  last_login DATE NOT NULL
+  last_login DATE
 );
 
 CREATE TABLE pets (
@@ -26,4 +26,4 @@ CREATE TABLE pets (
 
 
 INSERT INTO users (id, email, owner_name, avatar, password_hash, initialization_date_time, login_count, last_login)
-VALUES ('user_1', 'user_1@example.com', 'User One', 'user_avatar', 'user_password', '07-06-23', 0, '07-06-23');
+VALUES ('user_1', 'user_1@example.com', 'User One', 'user_avatar', 'user_password', '2023-07-06', 0, NULL);

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from models.User import User
+from models import User
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -71,3 +71,20 @@ def update_user(user_id):
         return jsonify({'message': 'User updated successfully'}), 200
     else:
         return jsonify({'error': 'Failed to update user'}), 500
+
+@user_bp.route('/<user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+
+    if user:
+        return jsonify({
+            'id': user.id,
+            'email': user.email,
+            'ownerName': user.owner_name,
+            'avatar': user.avatar,
+            'initializationDateTime': user.initialization_date_time.strftime('%Y-%m-%d %H:%M:%S')
+        }), 200
+    else:
+        return jsonify({'error': 'User not found'}), 404
+
+    

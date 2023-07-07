@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from models.Pet import Pet
+from models import Pet
 
 pet_bp = Blueprint('pet_bp', __name__)
 
@@ -11,22 +11,23 @@ def test():
 ################################################
 
 @pet_bp.route('/', methods=['POST'])
-def register_new_user():
+def register_new_pet():
     data = request.get_json()
 
-    email = data.get('email')
-    owner_name = data.get('ownerName')
+    owner_id = data.get('ownerId')
+    name = data.get('name')
     avatar = data.get('avatar')
-    password = data.get('password')
-    initialization_date_time  = datetime.now()
 
-    existing_user = User.query.filter_by(email=email).first()
-    if existing_user:
-        return jsonify({'error': 'duplicate email'}), 409
-    
-    token_bytes = User.register(email, owner_name, avatar, password)
-    token_string = token_bytes.decode('utf-8')
-    return jsonify({'token': token_string}), 200
+    existing_pet = Pet.query.filter_by(owner_id=owner_id, name=name).first()
+    if existing_pet:
+        return jsonify({'error': 'Duplicate pet'}), 409
+
+    result = Pet.add_pet(owner_id, name, avatar)
+    if result == 'success':
+        return jsonify({'message': 'Pet registered successfully'}), 200
+    else:
+        return jsonify({'error': 'Failed to register pet'}), 500
+
 
 @pet_bp.route('/auth', methods=['POST'])
 def authenticate_user():

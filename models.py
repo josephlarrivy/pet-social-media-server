@@ -27,9 +27,9 @@ class User(db.Model):
     owner_name = db.Column(db.String(50), nullable=False)
     avatar = db.Column(db.String(300), nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
-    initialization_date_time = db.Column(db.String(100), nullable=False)
+    initialization_date_time = db.Column(db.Date, nullable=False)
     login_count = db.Column(db.Integer, default=0)
-    last_login = db.Column(db.Integer, default='none')
+    last_login = db.Column(db.Date, default='none')
 
     def __init__(self, email, owner_name, avatar, password):
         self.id = 'user-' + str(uuid.uuid4())[:30]
@@ -92,3 +92,65 @@ class User(db.Model):
             return True
         else:
             return False
+
+
+class Pet(db.Model):
+    __tablename__ = 'pets'
+
+    id = db.Column(db.String(35), primary_key=True, unique=True, nullable=False)
+    owner_id = db.Column(db.String(35), db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    avatar = db.Column(db.String(300), nullable=False)
+    initialization_date_time = db.Column(db.Date, nullable=False)
+
+    def __init__(self, owner_id, name, avatar):
+        self.id = 'pet-' + str(uuid.uuid4())[:30]
+        self.owner_id = owner_id
+        self.name = name
+        self.avatar = avatar
+        self.initialization_date_time = datetime.now()
+
+    @classmethod
+    def add_pet(cls, owner_id, name, avatar):
+        try:
+            pet = cls(owner_id=owner_id, name=name, avatar=avatar)
+            pet.initialization_date_time = datetime.now()
+            db.session.add(pet)
+            db.session.commit()
+            return 'success'
+        except Exception as e:
+            print(str(e))
+            return 'error'
+
+    # @classmethod
+    # def authenticate(cls, email, password):
+    #     user = cls.query.filter_by(email=email).first()
+    #     if user and bcrypt.check_password_hash(user.password_hash, password):
+    #         user.login_count += 1
+    #         user.last_login = datetime.now()
+    #         db.session.add(user)
+    #         db.session.commit()
+    #         return user.generate_token()
+    #     else:
+    #         return None
+
+    # @classmethod
+    # def delete_user(cls, user_id):
+    #     user = cls.query.get(user_id)
+    #     if user:
+    #         db.session.delete(user)
+    #         db.session.commit()
+    #         return True
+    #     else:
+    #         return False
+
+    # @classmethod
+    # def update_column(cls, user_id, column_name, value):
+    #     user = cls.query.get(user_id)
+
+    #     if user:
+    #         setattr(user, column_name, value)
+    #         db.session.commit()
+    #         return True
+    #     else:
+    #         return False
