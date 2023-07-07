@@ -200,3 +200,68 @@ class Pet(db.Model):
             'initialization_date_time': pet.initialization_date_time
         }
         return serialized_pet
+
+class PetType(db.Model):
+    __tablename__ = 'pet_types'
+
+    id = db.Column(db.String(35), primary_key=True, unique=True, nullable=False)
+    type_name = db.Column(db.String(50), nullable=False)
+
+    def __init__(self, type_name, description=None):
+        self.id = 'type-' + str(uuid.uuid4())[:30]
+        self.type_name = type_name
+
+    @classmethod
+    def add_type(cls, type_name):
+        try:
+            pet_type = cls(type_name)
+            db.session.add(pet_type)
+            db.session.commit()
+            return 'success'
+        except Exception as e:
+            print(str(e))
+            return 'error'
+
+    @classmethod
+    def delete_type(cls, type_id):
+        pet_type = cls.query.get(type_id)
+        if pet_type:
+            db.session.delete(pet_type)
+            db.session.commit()
+            return True
+        else:
+            return False
+
+    @classmethod
+    def update_column(cls, type_id, column_name, value):
+        pet_type = cls.query.get(type_id)
+
+        if pet_type:
+            setattr(pet_type, column_name, value)
+            db.session.commit()
+            return True
+        else:
+            return False
+
+    @classmethod
+    def get_all(cls):
+        types = cls.query.all()
+        all_types = []
+
+        for pet_type in types:
+            serialized_type = {
+                'id': pet_type.id,
+                'type_name': pet_type.type_name
+            }
+            all_types.append(serialized_type)
+
+        return all_types
+
+    @classmethod
+    def get_type_by_id(cls, type_id):
+        pet_type = cls.query.get(type_id)
+        serialized_type = {
+            'id': pet_type.id,
+            'type_name': pet_type.type_name
+        }
+        return serialized_type

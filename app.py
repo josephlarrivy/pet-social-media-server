@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 from routes.user_routes import user_bp
 from routes.pet_routes import pet_bp
+from routes.pet_type_routes import pet_type_bp
 
 load_dotenv('.env')
 secret_key = os.getenv('SECRET_KEY')
@@ -21,8 +22,7 @@ def connect_db(app):
 app = Flask(__name__)
 app.register_blueprint(user_bp)
 app.register_blueprint(pet_bp)
-
-
+app.register_blueprint(pet_type_bp)
 
 
 CORS(app)
@@ -35,7 +35,6 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 db = SQLAlchemy()
 connect_db(app)
-
 
 
 #############################################
@@ -53,14 +52,7 @@ def testing_api_post():
 
 app.register_blueprint(user_bp, url_prefix='/users')
 app.register_blueprint(pet_bp, url_prefix='/pets')
-
-
-
-
-
-
-
-
+app.register_blueprint(pet_type_bp, url_prefix='/types')
 
 
 if __name__ == '__main__':
