@@ -34,15 +34,16 @@ POST - user login - accepts a json body in the request
     "password" : "test_password"
 }
 ```
-PATCH - update the name of a user - accepts a json body
+PATCH - update a column in the users table - accepts a json body
 ```
 /users/<user_id>
 ```
 ```
 {
     "columnName" : "owner_name",
-    "newValue" : "Updated"
+    "newValue" : "Updated Name"
 }
+```
 DELETE - remove a user from the database
 ```
 /users/<user_id>
@@ -54,7 +55,6 @@ GET - get all information except passwords for all users
 GET - get all information except password for a specific user by id
 ```
 /users/<user_id>
-```
 ```
 
 
