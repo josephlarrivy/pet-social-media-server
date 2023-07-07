@@ -29,7 +29,7 @@ def register_new_pet():
         return jsonify({'error': 'Failed to register pet'}), 500
 
 @pet_bp.route('/<pet_id>', methods=['DELETE'])
-def delete_user(pet_id):
+def delete_pet(pet_id):
     deleted = Pet.delete_pet(pet_id)
 
     if deleted:
@@ -38,7 +38,7 @@ def delete_user(pet_id):
         return jsonify({'error': 'Pet not found'}), 404
 
 @pet_bp.route('/<pet_id>', methods=['PATCH'])
-def update_user(pet_id):
+def update_pet(pet_id):
     pet = Pet.query.get(pet_id)
 
     if not pet:
@@ -57,3 +57,13 @@ def update_user(pet_id):
         return jsonify({'message': 'Pet updated successfully'}), 200
     else:
         return jsonify({'error': 'Failed to update pet'}), 500
+
+@pet_bp.route('/', methods=['GET'])
+def get_all_pets():
+    pets = Pet.get_all()
+    return jsonify({'data': pets})
+
+@pet_bp.route('/<pet_id>', methods=['GET'])
+def get_pet(pet_id):
+    pet = Pet.get_pet_by_id(pet_id)
+    return jsonify({'data': pet})

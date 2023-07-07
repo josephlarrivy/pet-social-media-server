@@ -72,19 +72,12 @@ def update_user(user_id):
     else:
         return jsonify({'error': 'Failed to update user'}), 500
 
+@user_bp.route('/', methods=['GET'])
+def get_all_users():
+    users = User.get_all()
+    return jsonify({'data': users})
+
 @user_bp.route('/<user_id>', methods=['GET'])
 def get_user(user_id):
-    user = User.query.filter_by(id=user_id).first()
-
-    if user:
-        return jsonify({
-            'id': user.id,
-            'email': user.email,
-            'ownerName': user.owner_name,
-            'avatar': user.avatar,
-            'initializationDateTime': user.initialization_date_time.strftime('%Y-%m-%d %H:%M:%S')
-        }), 200
-    else:
-        return jsonify({'error': 'User not found'}), 404
-
-    
+    user = User.get_user_by_id(user_id)
+    return jsonify({'data': user})

@@ -93,6 +93,35 @@ class User(db.Model):
         else:
             return False
 
+    @classmethod
+    def get_all(cls):
+        users = cls.query.all()
+        all_users = []
+
+        for user in users:
+            serialized_user = {
+                'id': user.id,
+                'email': user.email,
+                'owner_name': user.owner_name,
+                'avatar': user.avatar,
+                'initialization_date_time': user.initialization_date_time
+            }
+            all_users.append(serialized_user)
+
+        return all_users
+
+    @classmethod
+    def get_user_by_id(cls, user_id):
+        user = cls.query.get(user_id)
+        serialized_user = {
+            'id': user.id,
+            'email': user.email,
+            'owner_name': user.owner_name,
+            'avatar': user.avatar,
+            'initialization_date_time': user.initialization_date_time
+        }
+        return serialized_user
+
 
 class Pet(db.Model):
     __tablename__ = 'pets'
@@ -142,3 +171,32 @@ class Pet(db.Model):
             return True
         else:
             return False
+
+    @classmethod
+    def get_all(cls):
+        pets = cls.query.all()
+        all_pets = []
+
+        for pet in pets:
+            serialized_pet = {
+                'id': pet.id,
+                'owner_id': pet.owner_id,
+                'name': pet.name,
+                'avatar': pet.avatar,
+                'initialization_date_time': pet.initialization_date_time
+            }
+            all_pets.append(serialized_pet)
+
+        return all_pets
+
+    @classmethod
+    def get_pet_by_id(cls, pet_id):
+        pet = cls.query.get(pet_id)
+        serialized_pet = {
+            'id': pet.id,
+            'owner_id': pet.owner_id,
+            'name': pet.name,
+            'avatar': pet.avatar,
+            'initialization_date_time': pet.initialization_date_time
+        }
+        return serialized_pet
