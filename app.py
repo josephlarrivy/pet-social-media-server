@@ -4,14 +4,15 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import uuid
+from dotenv import load_dotenv
 
 
-from models.User import db
 from routes.user_routes import user_bp
+from routes.pet_routes import pet_bp
 
-secret_key = 'qwhdu&*UJdwqdqw'
-bcrypt = Bcrypt()
-db = SQLAlchemy()
+load_dotenv('.env')
+secret_key = os.getenv('SECRET_KEY')
+
 
 def connect_db(app):
     db.app = app
@@ -19,6 +20,7 @@ def connect_db(app):
 
 app = Flask(__name__)
 app.register_blueprint(user_bp)
+app.register_blueprint(pet_bp)
 
 
 
@@ -31,6 +33,7 @@ app.config["SQLALCHEMY_ECHO"] = False
 app.config["SECRET_KEY"] = secret_key
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
+db = SQLAlchemy()
 connect_db(app)
 
 
@@ -49,6 +52,7 @@ def testing_api_post():
 #############################################
 
 app.register_blueprint(user_bp, url_prefix='/users')
+app.register_blueprint(pet_bp, url_prefix='/pets')
 
 
 

@@ -1,16 +1,16 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from models.User import User
+from models.Pet import Pet
 
-user_bp = Blueprint('user_bp', __name__)
+pet_bp = Blueprint('pet_bp', __name__)
 
-@user_bp.route('/test', methods=['GET'])
+@pet_bp.route('/test', methods=['GET'])
 def test():
-    return jsonify({'status': 'users success'}), 200
+    return jsonify({'status': 'pets success'}), 200
 
 ################################################
 
-@user_bp.route('/', methods=['POST'])
+@pet_bp.route('/', methods=['POST'])
 def register_new_user():
     data = request.get_json()
 
@@ -28,7 +28,7 @@ def register_new_user():
     token_string = token_bytes.decode('utf-8')
     return jsonify({'token': token_string}), 200
 
-@user_bp.route('/auth', methods=['POST'])
+@pet_bp.route('/auth', methods=['POST'])
 def authenticate_user():
     data = request.get_json()
 
@@ -42,7 +42,7 @@ def authenticate_user():
     token_string = token_bytes.decode('utf-8')
     return jsonify({'token': token_string}), 200
 
-@user_bp.route('/<user_id>', methods=['DELETE'])
+@pet_bp.route('/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     deleted = User.delete_user(user_id)
 
@@ -51,7 +51,7 @@ def delete_user(user_id):
     else:
         return jsonify({'error': 'User not found'}), 404
 
-@user_bp.route('/<user_id>', methods=['PATCH'])
+@pet_bp.route('/<user_id>', methods=['PATCH'])
 def update_user(user_id):
     user = User.query.get(user_id)
 

@@ -19,8 +19,8 @@ def connect_db(app):
 
 ###########################################################
 
-class User(db.Model):
-    __tablename__ = 'users'
+class Pet(db.Model):
+    __tablename__ = 'pets'
 
     id = db.Column(db.String(70), primary_key=True, unique=True, nullable=False)
     email = db.Column(db.String(70), unique=True, nullable=False)
