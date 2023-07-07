@@ -122,35 +122,23 @@ class Pet(db.Model):
             print(str(e))
             return 'error'
 
-    # @classmethod
-    # def authenticate(cls, email, password):
-    #     user = cls.query.filter_by(email=email).first()
-    #     if user and bcrypt.check_password_hash(user.password_hash, password):
-    #         user.login_count += 1
-    #         user.last_login = datetime.now()
-    #         db.session.add(user)
-    #         db.session.commit()
-    #         return user.generate_token()
-    #     else:
-    #         return None
+    @classmethod
+    def delete_pet(cls, pet_id):
+        pet = cls.query.get(pet_id)
+        if pet:
+            db.session.delete(pet)
+            db.session.commit()
+            return True
+        else:
+            return False
 
-    # @classmethod
-    # def delete_user(cls, user_id):
-    #     user = cls.query.get(user_id)
-    #     if user:
-    #         db.session.delete(user)
-    #         db.session.commit()
-    #         return True
-    #     else:
-    #         return False
+    @classmethod
+    def update_column(cls, pet_id, column_name, value):
+        pet = cls.query.get(pet_id)
 
-    # @classmethod
-    # def update_column(cls, user_id, column_name, value):
-    #     user = cls.query.get(user_id)
-
-    #     if user:
-    #         setattr(user, column_name, value)
-    #         db.session.commit()
-    #         return True
-    #     else:
-    #         return False
+        if pet:
+            setattr(pet, column_name, value)
+            db.session.commit()
+            return True
+        else:
+            return False

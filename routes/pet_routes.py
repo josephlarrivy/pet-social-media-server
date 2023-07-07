@@ -28,36 +28,21 @@ def register_new_pet():
     else:
         return jsonify({'error': 'Failed to register pet'}), 500
 
-
-@pet_bp.route('/auth', methods=['POST'])
-def authenticate_user():
-    data = request.get_json()
-
-    email = data.get('email')
-    password = data.get('password')
-
-    token_bytes = User.authenticate(email, password)
-    if token_bytes is None:
-        return jsonify({'error': 'Invalid email or password'}), 401
-
-    token_string = token_bytes.decode('utf-8')
-    return jsonify({'token': token_string}), 200
-
-@pet_bp.route('/<user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    deleted = User.delete_user(user_id)
+@pet_bp.route('/<pet_id>', methods=['DELETE'])
+def delete_user(pet_id):
+    deleted = Pet.delete_pet(pet_id)
 
     if deleted:
-        return jsonify({'message': 'User deleted successfully'}), 200
+        return jsonify({'message': 'Pet deleted successfully'}), 200
     else:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'error': 'Pet not found'}), 404
 
-@pet_bp.route('/<user_id>', methods=['PATCH'])
-def update_user(user_id):
-    user = User.query.get(user_id)
+@pet_bp.route('/<pet_id>', methods=['PATCH'])
+def update_user(pet_id):
+    pet = Pet.query.get(pet_id)
 
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
+    if not pet:
+        return jsonify({'error': 'Pet not found'}), 404
 
     data = request.get_json()
     column_name = data.get('columnName')
@@ -66,9 +51,9 @@ def update_user(user_id):
     if not column_name or not new_value:
         return jsonify({'error': 'Invalid request data'}), 400
 
-    updated = user.update_column(user_id, column_name, new_value)
+    updated = pet.update_column(pet_id, column_name, new_value)
 
     if updated:
-        return jsonify({'message': 'User updated successfully'}), 200
+        return jsonify({'message': 'Pet updated successfully'}), 200
     else:
-        return jsonify({'error': 'Failed to update user'}), 500
+        return jsonify({'error': 'Failed to update pet'}), 500
