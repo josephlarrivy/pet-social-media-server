@@ -27,9 +27,9 @@ class User(db.Model):
     owner_name = db.Column(db.String(50), nullable=False)
     avatar = db.Column(db.String(300), nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
-    initialization_date_time = db.Column(db.Date, nullable=False)
+    initialization_date_time = db.Column(db.DateTime, nullable=False)
     login_count = db.Column(db.Integer, default=0)
-    last_login = db.Column(db.Date, default='none')
+    last_login = db.Column(db.DateTime, default='none')
 
     def __init__(self, email, owner_name, avatar, password):
         self.id = 'user-' + str(uuid.uuid4())[:30]
@@ -131,7 +131,7 @@ class Pet(db.Model):
     type_id = db.Column(db.String(35), db.ForeignKey('pet_types.id'))
     name = db.Column(db.String(50), nullable=False)
     avatar = db.Column(db.String(300), nullable=False)
-    initialization_date_time = db.Column(db.Date, nullable=False)
+    initialization_date_time = db.Column(db.DateTime, nullable=False)
 
     pet_type = db.relationship('PetType', backref=db.backref('pets', lazy=True))
 
@@ -288,3 +288,5 @@ class PetType(db.Model):
             'type_name': pet_type.type_name
         }
         return serialized_type
+
+

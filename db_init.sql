@@ -8,9 +8,9 @@ CREATE TABLE users (
   owner_name VARCHAR(50) NOT NULL,
   avatar VARCHAR(300) NOT NULL,
   password_hash VARCHAR(100) NOT NULL,
-  initialization_date_time DATE NOT NULL,
+  initialization_date_time TIMESTAMP NOT NULL,
   login_count INTEGER NOT NULL,
-  last_login DATE
+  last_login TIMESTAMP
 );
 
 CREATE TABLE pet_types (
@@ -24,7 +24,7 @@ CREATE TABLE pets (
   type_id VARCHAR(35) NOT NULL,
   name VARCHAR(50) NOT NULL,
   avatar VARCHAR(300) NOT NULL,
-  initialization_date_time DATE NOT NULL,
+  initialization_date_time TIMESTAMP NOT NULL,
   FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (type_id) REFERENCES pet_types (id) ON DELETE SET NULL
 );
