@@ -212,8 +212,6 @@ class Pet(db.Model):
 
         return user_pets
 
-
-
     @classmethod
     def get_pet_by_id(cls, pet_id):
         pet = cls.query.get(pet_id)
