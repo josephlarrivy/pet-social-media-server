@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from datetime import datetime
 from models import Pet
 
@@ -60,10 +60,16 @@ def update_pet(pet_id):
 
 @pet_bp.route('/', methods=['GET'])
 def get_all_pets():
-    pets = Pet.get_all()
-    return jsonify({'data': pets})
+    try:
+        pets = Pet.get_all()
+        return jsonify({'data': pets})
+    except Exception as e:
+        return make_response(jsonify({"error": "Failed to get pets: " + str(e)}), 500)
 
 @pet_bp.route('/<pet_id>', methods=['GET'])
 def get_pet(pet_id):
-    pet = Pet.get_pet_by_id(pet_id)
-    return jsonify({'data': pet})
+    try:
+        pet = Pet.get_pet_by_id(pet_id)
+        return jsonify({'data': pet})
+    except Exception as e:
+        return make_response(jsonify({"error": "Failed to get pet: " + str(e)}), 500)

@@ -14,10 +14,11 @@ CREATE TABLE users (
 
 CREATE TABLE pets (
   id VARCHAR(35) PRIMARY KEY NOT NULL,
-  owner_id VARCHAR(35) NOT NULL REFERENCES users (id),
+  owner_id VARCHAR(35) NOT NULL,
   name VARCHAR(50) NOT NULL,
   avatar VARCHAR(300) NOT NULL,
-  initialization_date_time DATE NOT NULL
+  initialization_date_time DATE NOT NULL,
+  FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 

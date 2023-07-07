@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from datetime import datetime
 from models import User
 
@@ -44,12 +44,16 @@ def authenticate_user():
 
 @user_bp.route('/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    deleted = User.delete_user(user_id)
+    try:
+        deleted = User.delete_user(user_id)
 
-    if deleted:
-        return jsonify({'message': 'User deleted successfully'}), 200
-    else:
-        return jsonify({'error': 'User not found'}), 404
+        if deleted:
+            return jsonify({'message': 'User deleted successfully'}), 200
+        else:
+            return jsonify({'error': 'User not found'}), 404
+
+    except Exception as e:
+        return make_response(jsonify({"error": "Failed to delete user: " + str(e)}), 500)
 
 @user_bp.route('/<user_id>', methods=['PATCH'])
 def update_user(user_id):
@@ -74,10 +78,16 @@ def update_user(user_id):
 
 @user_bp.route('/', methods=['GET'])
 def get_all_users():
-    users = User.get_all()
-    return jsonify({'data': users})
+    try:
+        users = User.get_all()
+        return jsonify({'data': users})
+    except Exception as e:
+        return make_response(jsonify({"error": "Failed to get users: " + str(e)}), 500)
 
 @user_bp.route('/<user_id>', methods=['GET'])
 def get_user(user_id):
-    user = User.get_user_by_id(user_id)
-    return jsonify({'data': user})
+    try:
+        user = User.get_user_by_id(user_id)
+        return jsonify({'data': user})
+    except Exception as e:
+        return make_response(jsonify({"error": "Failed to get user: " + str(e)}), 500)
