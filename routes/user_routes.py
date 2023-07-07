@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from datetime import datetime
-from models import User
+from models import User, Pet
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -84,10 +84,10 @@ def get_all_users():
     except Exception as e:
         return make_response(jsonify({"error": "Failed to get users: " + str(e)}), 500)
 
-@user_bp.route('/<user_id>', methods=['GET'])
-def get_user(user_id):
+@user_bp.route('/<user_id>/pets', methods=['GET'])
+def get_user_pets(user_id):
     try:
-        user = User.get_user_by_id(user_id)
-        return jsonify({'data': user})
+        pets = Pet.get_pets_by_user_id(user_id)
+        return jsonify({'data': pets})
     except Exception as e:
-        return make_response(jsonify({"error": "Failed to get user: " + str(e)}), 500)
+        return make_response(jsonify({"error": "Failed to get user's pets: " + str(e)}), 500)

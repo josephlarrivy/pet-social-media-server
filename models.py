@@ -128,21 +128,25 @@ class Pet(db.Model):
 
     id = db.Column(db.String(35), primary_key=True, unique=True, nullable=False)
     owner_id = db.Column(db.String(35), db.ForeignKey('users.id'), nullable=False)
+    type_id = db.Column(db.String(35), db.ForeignKey('pet_types.id'))
     name = db.Column(db.String(50), nullable=False)
     avatar = db.Column(db.String(300), nullable=False)
     initialization_date_time = db.Column(db.Date, nullable=False)
 
-    def __init__(self, owner_id, name, avatar):
+    pet_type = db.relationship('PetType', backref=db.backref('pets', lazy=True))
+
+    def __init__(self, owner_id, type_id, name, avatar):
         self.id = 'pet-' + str(uuid.uuid4())[:30]
         self.owner_id = owner_id
+        self.type_id = type_id
         self.name = name
         self.avatar = avatar
         self.initialization_date_time = datetime.now()
 
     @classmethod
-    def add_pet(cls, owner_id, name, avatar):
+    def add_pet(cls, owner_id, type_id, name, avatar):
         try:
-            pet = cls(owner_id=owner_id, name=name, avatar=avatar)
+            pet = cls(owner_id=owner_id, type_id=type_id, name=name, avatar=avatar)
             pet.initialization_date_time = datetime.now()
             db.session.add(pet)
             db.session.commit()
@@ -183,11 +187,32 @@ class Pet(db.Model):
                 'owner_id': pet.owner_id,
                 'name': pet.name,
                 'avatar': pet.avatar,
+                'pet_type': pet.pet_type.type_name if pet.pet_type else None,
                 'initialization_date_time': pet.initialization_date_time
             }
             all_pets.append(serialized_pet)
 
         return all_pets
+
+    @classmethod
+    def get_pets_by_user_id(cls, user_id):
+        pets = cls.query.filter_by(owner_id=user_id).all()
+        user_pets = []
+
+        for pet in pets:
+            serialized_pet = {
+                'id': pet.id,
+                'owner_id': pet.owner_id,
+                'name': pet.name,
+                'avatar': pet.avatar,
+                'pet_type': pet.pet_type.type_name if pet.pet_type else None,
+                'initialization_date_time': pet.initialization_date_time
+            }
+            user_pets.append(serialized_pet)
+
+        return user_pets
+
+
 
     @classmethod
     def get_pet_by_id(cls, pet_id):

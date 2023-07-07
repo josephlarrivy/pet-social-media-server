@@ -39,11 +39,11 @@ connect_db(app)
 
 #############################################
 
-@app.route('/test', methods=['GET'])
+@app.route('/test/app', methods=['GET'])
 def testing_api_get():
-    return 'connected'
+    return jsonify({'status' : 'connected'})
 
-@app.route('/test', methods=['POST'])
+@app.route('/test/app', methods=['POST'])
 def testing_api_post():
     data = request.get_json()
     return data

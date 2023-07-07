@@ -15,6 +15,7 @@ def register_new_pet():
     data = request.get_json()
 
     owner_id = data.get('ownerId')
+    type_id = data.get('typeId')
     name = data.get('name')
     avatar = data.get('avatar')
 
@@ -22,7 +23,7 @@ def register_new_pet():
     if existing_pet:
         return jsonify({'error': 'Duplicate pet'}), 409
 
-    result = Pet.add_pet(owner_id, name, avatar)
+    result = Pet.add_pet(owner_id, type_id, name, avatar)
     if result == 'success':
         return jsonify({'message': 'Pet registered successfully'}), 200
     else:
