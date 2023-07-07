@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from routes.user_routes import user_bp
 from routes.pet_routes import pet_bp
 from routes.pet_type_routes import pet_type_bp
+from routes.post_routes import post_bp
 
 load_dotenv('.env')
 secret_key = os.getenv('SECRET_KEY')
@@ -43,6 +44,7 @@ def testing_api_post():
 app.register_blueprint(user_bp, url_prefix='/users')
 app.register_blueprint(pet_bp, url_prefix='/pets')
 app.register_blueprint(pet_type_bp, url_prefix='/types')
+app.register_blueprint(post_bp, url_prefix='/posts')
 
 
 if __name__ == '__main__':

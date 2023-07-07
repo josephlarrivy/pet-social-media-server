@@ -290,3 +290,18 @@ class PetType(db.Model):
         return serialized_type
 
 
+class Post(db.Model):
+    __tablename__ = 'posts'
+
+    id = db.Column(db.String(70), primary_key=True, unique=True, nullable=False)
+    pet_id = db.Column(db.String(70), db.ForeignKey('pets.id'), nullable=False)
+    owner_id = db.Column(db.String(70), db.ForeignKey('users.id'), nullable=False)
+    text = db.Column(db.Text, nullable=False)
+    initialization_date_time = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, pet_id, owner_id, text):
+        self.id = 'post-' + str(uuid.uuid4())[:30]
+        self.pet_id = pet_id
+        self.owner_id = owner_id
+        self.text = text
+        self.initialization_date_time = datetime.now()
